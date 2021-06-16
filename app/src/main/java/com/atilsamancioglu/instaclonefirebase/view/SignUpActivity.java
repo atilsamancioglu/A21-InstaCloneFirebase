@@ -1,4 +1,4 @@
-package com.atilsamancioglu.instaclonefirebase;
+package com.atilsamancioglu.instaclonefirebase.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.atilsamancioglu.instaclonefirebase.R;
+import com.atilsamancioglu.instaclonefirebase.databinding.ActivitySignupBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -19,23 +21,22 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     private FirebaseAuth firebaseAuth;
-    EditText emailText, passwordText;
-
+    private ActivitySignupBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        binding = ActivitySignupBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        emailText = findViewById(R.id.emailText);
-        passwordText = findViewById(R.id.passwordText);
 
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         if (firebaseUser != null) {
 
-            Intent intent = new Intent(SignUpActivity.this,FeedActivity.class);
+            Intent intent = new Intent(SignUpActivity.this, FeedActivity.class);
             startActivity(intent);
             finish();
 
@@ -46,8 +47,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void signInClicked (View view) {
 
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
+        String email = binding.emailText.getText().toString();
+        String password = binding.passwordText.getText().toString();
 
 
         firebaseAuth.signInWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -70,8 +71,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void signUpClicked (View view) {
 
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
+        String email = binding.emailText.getText().toString();
+        String password = binding.passwordText.getText().toString();
 
 
         firebaseAuth.createUserWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {

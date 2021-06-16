@@ -1,4 +1,4 @@
-package com.atilsamancioglu.instaclonefirebase;
+package com.atilsamancioglu.instaclonefirebase.view;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,8 +11,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
+import com.atilsamancioglu.instaclonefirebase.adapter.FeedRecyclerAdapter;
+import com.atilsamancioglu.instaclonefirebase.databinding.ActivityFeedBinding;
+import com.atilsamancioglu.instaclonefirebase.model.Post;
+import com.atilsamancioglu.instaclonefirebase.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,10 +34,9 @@ public class FeedActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    ArrayList<String> userEmailFromFB;
-    ArrayList<String> userCommentFromFB;
-    ArrayList<String> userImageFromFB;
+    ArrayList<Post> postArrayList;
     FeedRecyclerAdapter feedRecyclerAdapter;
+    private ActivityFeedBinding binding;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,11 +70,11 @@ public class FeedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feed);
+        binding = ActivityFeedBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
-        userCommentFromFB = new ArrayList<>();
-        userEmailFromFB = new ArrayList<>();
-        userImageFromFB = new ArrayList<>();
+        postArrayList = new ArrayList<Post>();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -80,10 +84,9 @@ public class FeedActivity extends AppCompatActivity {
 
         //RecyclerView
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        feedRecyclerAdapter = new FeedRecyclerAdapter(userEmailFromFB,userCommentFromFB,userImageFromFB);
-        recyclerView.setAdapter(feedRecyclerAdapter);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        feedRecyclerAdapter = new FeedRecyclerAdapter(postArrayList);
+        binding.recyclerView.setAdapter(feedRecyclerAdapter);
 
     }
 
@@ -111,14 +114,12 @@ public class FeedActivity extends AppCompatActivity {
                         String userEmail = (String) data.get("useremail");
                         String downloadUrl = (String) data.get("downloadurl");
 
-                        userCommentFromFB.add(comment);
-                        userEmailFromFB.add(userEmail);
-                        userImageFromFB.add(downloadUrl);
+                        Post post = new Post(userEmail,comment,downloadUrl);
 
-                        feedRecyclerAdapter.notifyDataSetChanged();
+                        postArrayList.add(post);
 
                     }
-
+                    feedRecyclerAdapter.notifyDataSetChanged();
 
                 }
 
