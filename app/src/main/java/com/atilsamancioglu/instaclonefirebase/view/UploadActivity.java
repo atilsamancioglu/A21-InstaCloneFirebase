@@ -68,13 +68,10 @@ public class UploadActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-
     }
 
     public void upload(View view) {
-
         if (imageData != null) {
-
 
             //universal unique id
             UUID uuid = UUID.randomUUID();
@@ -119,10 +116,6 @@ public class UploadActivity extends AppCompatActivity {
                                     Toast.makeText(UploadActivity.this,e.getLocalizedMessage().toString(),Toast.LENGTH_LONG).show();
                                 }
                             });
-
-
-
-
                         }
                     });
 
@@ -137,44 +130,20 @@ public class UploadActivity extends AppCompatActivity {
 
         }
 
-
-
-
     }
 
     public void selectImage(View view) {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            //ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},1);
             permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
 
         } else {
             Intent intentToGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            //startActivityForResult(intentToGallery,2);
             activityResultLauncher.launch(intentToGallery);
 
         }
 
     }
-
-    /*
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent intentToGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                //startActivityForResult(intentToGallery,2);
-                activityResultLauncher.launch(intentToGallery);
-            }
-        }
-
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-     */
 
     public void registerLauncher() {
         activityResultLauncher = registerForActivityResult(
@@ -215,7 +184,6 @@ public class UploadActivity extends AppCompatActivity {
                         if(result) {
                             //permission granted
                             Intent intentToGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            //startActivityForResult(intentToGallery,2);
                             activityResultLauncher.launch(intentToGallery);
 
                         } else {
@@ -227,38 +195,4 @@ public class UploadActivity extends AppCompatActivity {
                 });
     }
 
-    /*
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-        if (requestCode == 2 && resultCode == RESULT_OK && data != null ) {
-
-            imageData = data.getData();
-
-            try {
-
-                if (Build.VERSION.SDK_INT >= 28) {
-                    ImageDecoder.Source source = ImageDecoder.createSource(this.getContentResolver(),imageData);
-                    selectedImage = ImageDecoder.decodeBitmap(source);
-                    imageView.setImageBitmap(selectedImage);
-                } else {
-                    selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imageData);
-                    imageView.setImageBitmap(selectedImage);
-                }
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-     */
 }
